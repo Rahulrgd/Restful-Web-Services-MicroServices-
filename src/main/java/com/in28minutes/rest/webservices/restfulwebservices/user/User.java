@@ -1,13 +1,12 @@
 package com.in28minutes.rest.webservices.restfulwebservices.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name = "user_details")
 public class User {
@@ -23,6 +22,8 @@ public class User {
   @Past(message = "BirthDate must be in pats")
   @JsonProperty("birth_date")
   private LocalDate birthDate;
+
+  public User() {}
 
   public User(Integer id, String name, LocalDate birthDate) {
     this.id = id;
