@@ -21,12 +21,12 @@ public class User {
   @JsonProperty("user_name")
   private String name;
 
-  @Past(message = "BirthDate must be in pats")
+  @Past(message = "BirthDate must be in past")
   @JsonProperty("birth_date")
   private LocalDate birthDate;
 
   @OneToMany(mappedBy = "user")
-  private List<Post> post;
+  private List<Post> posts;
 
   public User() {}
 
@@ -58,6 +58,14 @@ public class User {
 
   public void setBirthDate(LocalDate birthDate) {
     this.birthDate = birthDate;
+  }
+
+  public List<Post> getPost() {
+    return posts;
+  }
+
+  public void setPost(List<Post> posts) {
+    this.posts = posts;
   }
 
   @Override
