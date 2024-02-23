@@ -3,6 +3,7 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.in28minutes.rest.webservices.restfulwebservices.jpa.PostRepository;
 import com.in28minutes.rest.webservices.restfulwebservices.jpa.UserRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -28,6 +29,9 @@ public class UserJpaResource {
 
   @Autowired
   private UserRepository repository;
+
+  @Autowired
+  private PostRepository postRepository;
 
   public UserJpaResource(UserDaoService service) {
     this.service = service;
@@ -76,5 +80,22 @@ public class UserJpaResource {
       throw new UserNotFoundException("id: " + id);
     }
     return user.get().getPost();
+  }
+
+  @PostMapping("/jpa/users/{id}/posts")
+  public ResponseEntity<Object> createPostForUser(@PathVariable Integer id, @Valid @RequestBody Post post) {
+    Optional<User> user = repository.findById(id);
+    if (user.isEmpty()) {
+      throw new UserNotFoundException("id: " + id);
+    }
+    post.setUser(user.get());
+    @Valid
+    Post savedPost = postRepository.save(post);
+    URI location = ServletUriComponentsBuilder
+      .fromCurrentRequest()
+      .path("/{id}")
+      .buildAndExpand(savedPost.getId())
+      .toUri();
+    return ResponseEntity.created(location).build();
   }
 }
